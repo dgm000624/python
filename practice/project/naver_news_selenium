@@ -8,10 +8,10 @@ from datetime import timedelta, datetime
 
 browser = webdriver.Chrome()
 
-Start_date = "2025.04.01"
+Start_date = "2025.09.15"
 End_date = "2025.10.30"
 repeat = 30
-Search_Word = "달러+약세"
+Search_Word = "금+시세"
 #Start_date로부터 End_date까지 Search_Word에 해당하는 웹피이지로 이동
 
 def plusdate(days):
@@ -29,7 +29,7 @@ while(roop < repeat) :
   time.sleep(1)
   articles = browser.find_elements(By.CSS_SELECTOR, "div.sds-comps-vertical-layout.sds-comps-full-layout")
   for i in articles :
-    title.append(i.find_element(
+    title.append(date+" "+i.find_element(
     By.CSS_SELECTOR,
     "span.sds-comps-text.sds-comps-text-ellipsis.sds-comps-text-ellipsis-1.sds-comps-text-type-headline1"
       ).text
@@ -42,5 +42,5 @@ time.sleep(1)
 title = set(title)
 title = list(title)
 for i in title :
-  if "트럼프" in i :
-    print(i)
+  # if "트럼프" in i :
+  print(i)
