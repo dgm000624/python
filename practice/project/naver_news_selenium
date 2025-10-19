@@ -1,0 +1,46 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+import time
+from datetime import timedelta, datetime
+
+
+
+browser = webdriver.Chrome()
+
+Start_date = "2025.04.01"
+End_date = "2025.10.30"
+repeat = 30
+Search_Word = "달러+약세"
+#Start_date로부터 End_date까지 Search_Word에 해당하는 웹피이지로 이동
+
+def plusdate(days):
+    start_date = datetime.strptime(Start_date, "%Y.%m.%d")
+    new_date = start_date + timedelta(days=days)
+    return new_date.strftime("%Y.%m.%d")
+
+roop = 0
+title = []
+while(roop < repeat) :
+  print(f"{roop}번째 반복")
+  date = plusdate(roop)
+  print(date)
+  browser.get(f"https://search.naver.com/search.naver?ssc=tab.news.all&query={Search_Word}&sm=tab_opt&sort=2&photo=0&field=0&pd=3&ds={date}&de={date}&docid=&related=0&mynews=0&office_type=0&office_section_code=0&news_office_checked=&nso=so%3Ar%2Cp%3Afrom20250415to20251019&is_sug_officeid=0&office_category=0&service_area=0")
+  time.sleep(1)
+  articles = browser.find_elements(By.CSS_SELECTOR, "div.sds-comps-vertical-layout.sds-comps-full-layout")
+  for i in articles :
+    title.append(i.find_element(
+    By.CSS_SELECTOR,
+    "span.sds-comps-text.sds-comps-text-ellipsis.sds-comps-text-ellipsis-1.sds-comps-text-type-headline1"
+      ).text
+    )
+  roop += 1
+
+
+time.sleep(1)
+
+title = set(title)
+title = list(title)
+for i in title :
+  if "트럼프" in i :
+    print(i)
