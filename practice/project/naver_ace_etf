@@ -1,0 +1,32 @@
+from bs4 import BeautifulSoup
+import requests
+import pandas as pd
+import openpyxl
+
+url = 'https://navercomp.wisereport.co.kr/ETF/GetNAVData.aspx?startDT=2024-09-25&endDT=2025-10-20&dataType=D&cmp_cd=411060&cmp_typ=5'
+
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+}
+
+aurl = 'https://api.investing.com/api/financialdata/historical/1183178?start-date=2024-09-25&end-date=2025-10-20&time-frame=Daily&add-missing-rows=false'
+
+request = requests.get(url, headers=headers)
+
+# print(request.text)
+
+data = request.json()
+
+close_value = []
+
+for item in data["grid_data"]:
+    date = item["TRD_DT"]
+    close_price = item["CLOSE_PRC"]
+    close_value.append({"date" : date, "close_price" : close_price})
+    print(date, close_price)
+
+
+df = pd.DataFrame(close_value)
+df.to_excel("ace_etf.xlsx", index=False, engine = "openpyxl")
+print("저장완료")
