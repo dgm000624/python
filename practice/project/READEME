@@ -1,0 +1,13 @@
+A_bank_interests : 미국 중앙은행 금리에 대해 크롤링. 
+
+gold_price_scrawling : 금 시세에 대해서 크롤링
+
+interaction_value : 여러 수집데이터를 가지고 상관계수 구하기. 미리 엑셀파일이든 csv든간에 정리 되있어야함
+
+naver_ace_etf : 네이버 증권읜 ACE KRX금현물에 대한 종가 데이터
+
+naver_news_selenium : 네이버 뉴스의 제목'만' 크롤링하는 구조. 방식은 기간별로 매번 페이지를 갱신해서 따오는 방식
+
+naver_usd : 네이버 증권에서 달러/원 환율 따오기
+
+vix_scrawling : 네이버 증권에서 vix 수치 크롤링해오기
