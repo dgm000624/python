@@ -5,31 +5,39 @@ import time
 from datetime import timedelta, datetime
 
 
-
+#크롬 실행
 browser = webdriver.Chrome()
 
+#초기 세팅, End_date는 별 의미 없고 Start_date로부터 repeat일만큼 실행됨. 
 Start_date = "2025.09.15"
 End_date = "2025.10.30"
 repeat = 30
 Search_Word = "금+시세"
 #Start_date로부터 End_date까지 Search_Word에 해당하는 웹피이지로 이동
 
+# 날짜 구하기용. 
 def plusdate(days):
     start_date = datetime.strptime(Start_date, "%Y.%m.%d")
     new_date = start_date + timedelta(days=days)
     return new_date.strftime("%Y.%m.%d")
 
+
 roop = 0
 title = []
+
+# roop는 대략 (1+roop)일 째 뉴스 크롤링에 사용됨
 while(roop < repeat) :
   print(f"{roop}번째 반복")
   date = plusdate(roop)
   print(date)
+    # 사전에 정의해둔 변수들 대입해서 브라우저 열기
   browser.get(f"https://search.naver.com/search.naver?ssc=tab.news.all&query={Search_Word}&sm=tab_opt&sort=2&photo=0&field=0&pd=3&ds={date}&de={date}&docid=&related=0&mynews=0&office_type=0&office_section_code=0&news_office_checked=&nso=so%3Ar%2Cp%3Afrom20250415to20251019&is_sug_officeid=0&office_category=0&service_area=0")
   time.sleep(1)
+    # 기사에 해당하는 html칸 전체를 가져오기
   articles = browser.find_elements(By.CSS_SELECTOR, "div.sds-comps-vertical-layout.sds-comps-full-layout")
   for i in articles :
     title.append(date+" "+i.find_element(
+    # 해당하는 기사 내부의 기사제목에 해당하는 요소를 가져와서 title리스트에 추가
     By.CSS_SELECTOR,
     "span.sds-comps-text.sds-comps-text-ellipsis.sds-comps-text-ellipsis-1.sds-comps-text-type-headline1"
       ).text
@@ -39,8 +47,12 @@ while(roop < repeat) :
 
 time.sleep(1)
 
+# 노이즈 값인지 같은 제목이 여러번 추가되는 현상이 발견되서 set으로 중복값 한번 제거
+# 날짜는 뒤죽박죽으로 섞여있는데 슬라이싱으로 첫10자리 슬라이스 해서 datetime으로 만들고 정렬시키면 됨
 title = set(title)
 title = list(title)
+
+# 해당 뉴스에 "트럼프"라는 단어가 있을 때만 출력하기
 for i in title :
   # if "트럼프" in i :
   print(i)
