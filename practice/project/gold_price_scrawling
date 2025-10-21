@@ -3,30 +3,38 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 
+
+#st_date는 시작일, end_date는 마지막 수집 일, page는 받아오는 테이블 갱신용
 st_date = "2023-01-20"
 end_date = "2025-10-20"
 page = "1"
 
-
+#요청용 코드. json파일을 받아옴
 url = f"https://www.goodgold.co.kr/ajax/ajax.chart2.php?act=tbl&st_date={st_date}&end_date={end_date}&code=gold&page_rows=5&page={page}"
 
+# 받은 코드를 json으로 받고, list속성(실제 시세 데이터가 들어있는 부분)만 가져와서 html 파싱함
 res = requests.get(url)
 print(res.status_code)
 res = json.loads(res.text)
 soup = BeautifulSoup(res['list'], 'html.parser')
 total_page = int(res['total_page'])
 
+# 수집 데이터 임시 저장용
 data = []
 
+# total_page(json 파일에서 정의해준)만큼 반복하여 데이터를 수집
 for i in range(1, total_page+1):
     url = f"https://www.goodgold.co.kr/ajax/ajax.chart2.php?act=tbl&st_date={st_date}&end_date={end_date}&code=gold&page_rows=5&page={i}"
     res = requests.get(url)
     res = json.loads(res.text)
     soup = BeautifulSoup(res['list'], 'html.parser')
+
+    # 실제로 필요한 데이터 정보 찾기
     row = soup.find("tbody")
     trs = row.find_all("tr")
     for k in trs:
         tds = k.find_all("td")
+        # 데이터를 딕셔너리 형태로 저장
         data.append({"date":tds[0].text, "value":tds[1].text})
     print(f"{i}번째 페이지 완료")
 
