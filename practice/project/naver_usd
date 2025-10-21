@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import time
 
+# https://finance.naver.com/marketindex/exchangeDetail.naver?marketindexCd=FX_USDKRW -> 네이버 페이 증권 달러 환율
 
 MAX_PAGES = 50
 REQUEST_DELAY = 1.5
