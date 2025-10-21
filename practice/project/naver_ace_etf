@@ -25,7 +25,7 @@ while flag:
     # json파일로 로드
     res = json.loads(res.text)
 
-    #모든 json형태 파일들에 대해서 실행
+    #모든 json형태 데이터들에 대해서 실행
     for i in res:
         date = i['localTradedAt']
         closePrice = i['closePrice']
