@@ -11,20 +11,27 @@ url = f'https://m.stock.naver.com/api/stock/411060/price?pageSize=10&page={page}
 data = []
 flag = True
 
+
+#end_date까지 반복하지만 최대 9일치까지 추가 저장될 수 있음
 end_date = '2025-04-30'
+# end_date를 datetime 형태로 변환
 end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
+# flag가 false가 될따까지 반복
 while flag:
     url = f'https://m.stock.naver.com/api/stock/411060/price?pageSize=10&page={page}'
 
     res = requests.get(url)
+    # json파일로 로드
     res = json.loads(res.text)
 
+    #모든 json형태 파일들에 대해서 실행
     for i in res:
         date = i['localTradedAt']
         closePrice = i['closePrice']
         data.append({"date": date, "closePrice": closePrice})
         current_date = datetime.strptime(date, '%Y-%m-%d').date()
+        # current_date가 end_date보다 작을 경우 즉 현재 저장된 데이터가 설정된 날짜 이전일 경우 반복문을 빠져나옴 
         if current_date < end_date :
             flag = False
             break
