@@ -1,31 +1,37 @@
-from bs4 import BeautifulSoup
+from datetime import datetime
+
+import json
 import requests
 import pandas as pd
-import openpyxl
-
-#
-url = 'https://navercomp.wisereport.co.kr/ETF/GetNAVData.aspx?startDT=2024-09-25&endDT=2025-10-20&dataType=D&cmp_cd=411060&cmp_typ=5'
-
-# 봇방지 우회용
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-}
-
-request = requests.get(url, headers=headers)
-
-# print(request.text)
-
-data = request.json()
-
-close_value = []
-
-for item in data["grid_data"]:
-    date = item["TRD_DT"]
-    close_price = item["CLOSE_PRC"]
-    close_value.append({"date" : date, "close_price" : close_price})
-    print(date, close_price)
 
 
-df = pd.DataFrame(close_value)
-df.to_excel("ace_etf.xlsx", index=False, engine = "openpyxl")
-print("저장완료")
+page = 1
+
+url = f'https://m.stock.naver.com/api/stock/411060/price?pageSize=10&page={page}'
+data = []
+flag = True
+
+end_date = '2025-04-30'
+end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+while flag:
+    url = f'https://m.stock.naver.com/api/stock/411060/price?pageSize=10&page={page}'
+
+    res = requests.get(url)
+    res = json.loads(res.text)
+
+    for i in res:
+        date = i['localTradedAt']
+        closePrice = i['closePrice']
+        data.append({"date": date, "closePrice": closePrice})
+        current_date = datetime.strptime(date, '%Y-%m-%d').date()
+        if current_date < end_date :
+            flag = False
+            break
+    print(f"{page}번째 페이지 수집 완료")
+    page +=1
+
+df = pd.DataFrame(data)
+df.to_excel("temp_etf.xlsx", index=False, engine='openpyxl')
+
+
