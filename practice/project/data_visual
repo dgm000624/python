@@ -5,7 +5,12 @@ import pandas as pd
 
 df = pd.read_excel("comparison_all.xlsx")
 
+#확인용 출력
 print(df)
+
+#실선 형태로 "date"를 x축, "원/달러 환율"을 y축으로 설정. *추가를 원하면 y축 리스트 추가
 fig = px.line(df, x = "date", y = ["원/달러 환율 (매매기준율)" ])
+
+# x축을 뒤집음(여기선 (최신)자료 -> (구)자료 를 (구)자료 -> (최신)자료로 뒤집기 위해서 )
 fig.update_layout(xaxis=dict(autorange="reversed"))
 fig.show()
