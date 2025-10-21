@@ -21,6 +21,7 @@ data = []
 # tr을 기준으로 파싱한 모든 파일에 대해서 반복
 for row in rows:
     cells = row.find_all('td')
+    #너무 짧으면(노이즈 값 같으면) 제외
     if len(cells) == 3:
         date = cells[0].get_text(strip=True)  # 날짜
         rate_before = cells[1].get_text(strip=True).replace('\n',' ').strip()
@@ -29,7 +30,7 @@ for row in rows:
 
 
 
-
+#pandas를 이용해서 엑셀 파일로 저장
 df = pd.DataFrame(data)
 df.to_excel("bank_intestests.xlsx", index=False, engine = "openpyxl")
 print("저장완료")
