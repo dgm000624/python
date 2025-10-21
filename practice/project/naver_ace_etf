@@ -3,14 +3,13 @@ import requests
 import pandas as pd
 import openpyxl
 
+#
 url = 'https://navercomp.wisereport.co.kr/ETF/GetNAVData.aspx?startDT=2024-09-25&endDT=2025-10-20&dataType=D&cmp_cd=411060&cmp_typ=5'
 
-
+# 봇방지 우회용
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
 }
-
-aurl = 'https://api.investing.com/api/financialdata/historical/1183178?start-date=2024-09-25&end-date=2025-10-20&time-frame=Daily&add-missing-rows=false'
 
 request = requests.get(url, headers=headers)
 
