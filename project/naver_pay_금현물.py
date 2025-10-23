@@ -1,0 +1,39 @@
+import time
+from datetime import timedelta, datetime
+
+import json
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+import time
+
+page = 1
+
+url = f'https://m.stock.naver.com/api/stock/411060/price?pageSize=10&page={page}'
+data = []
+flag = True
+
+end_date = '2025-04-30'
+end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+while flag:
+    url = f'https://m.stock.naver.com/api/stock/411060/price?pageSize=10&page={page}'
+
+    res = requests.get(url)
+    res = json.loads(res.text)
+
+    for i in res:
+        date = i['localTradedAt']
+        closePrice = i['closePrice']
+        data.append({"date": date, "closePrice": closePrice})
+        current_date = datetime.strptime(date, '%Y-%m-%d').date()
+        if current_date < end_date :
+            flag = False
+            break
+    print(f"{page}번째 페이지 수집 완료")
+    page +=1
+
+df = pd.DataFrame(data)
+df.to_excel("temp_etf.xlsx", index=False, engine='openpyxl')
+
+

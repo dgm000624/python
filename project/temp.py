@@ -1,22 +1,35 @@
-import requests
-from bs4 import BeautifulSoup
+# import pandas as pd
+#
+# df = pd.read_excel('ForCal.xlsx')
+# # print(df['won/dollar']-df['gold_price'])
+# # df['date'] = pd.to_datetime(df['date'])
+# # df = df.set_index('date')
+# dfDOLLAR = df['won/dollar']
+# dfGOLD = df['gold_price']
+# dfDATE = df['date']
+# dfVIX = df['VIX_종가']
+# dfETF = df['금ETF']
+#
+# dfDOLLAR_GOLD = df.merge(dfDOLLAR, dfGOLD)
+#
 
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-}
-
-news_url = 'https://s.search.naver.com/p/newssearch/3/api/tab/more?abt=%5B%7B%22eid%22%3A%22NEWS-CROP-IMG%22%2C%22value%22%3A%7B%22bucket%22%3A%22%22%2C%22bt%22%3A%222%22%2C%22is_control%22%3Atrue%7D%7D%5D&cluster_rank=244&de=&ds=&eid=&field=0&force_original=&is_dts=0&is_sug_officeid=0&mynews=0&news_office_checked=&nlu_query=&nqx_theme=&nso=so%3Ar%2Cp%3Aall%2Ca%3Aall&nx_and_query=&nx_search_hlquery=&nx_search_query=&nx_sub_query=&office_category=&office_section_code=0&office_type=0&pd=0&photo=0&query=%EC%9D%B8%EB%8F%84+%2B+%EA%B8%88&query_original=&rev=0&service_area=&sm=tab_smr&sort=0&spq=0&ssc=tab.news.all&start=1'
-response = requests.get(news_url, headers=headers)
-
-print(response.status_code)  # 200아니면 망한거
-print(len(response.text))
-
-soup = BeautifulSoup(response.text, 'html.parser')
-print(soup)
-
-
-tag_span = soup.find('a')
-tag_title = tag_span.find('\"title\":\"\u003cmark\u003e금\u003c/mark\u003e')
-print(tag_title)
-
-# print(tag_span.count)
+import pandas as pd
+#엑셀 읽어오기
+df = pd.read_excel('gold_interests.xlsx')
+#엑셀의 'date'를 시간데이터로 바꾸기
+df['date'] = pd.to_datetime(df['date'])
+# 기준 인덱스를 'date'로 하겠다
+df = df.set_index('date')
+# 해당 날짜 이후의 데이터만 수집
+df = df[df.index > '2024-10-01']
+# 사용할 y축(상관계수를 구하고 싶은 요소)
+cols = ['buy_price', 'interest_rate']
+# df의 기본 내장 기능중 pearson기법 사용
+correlation_matrix = df.corr(method='pearson', numeric_only=True)
+print('-'*20 + "상관계수" + '-'*20)
+# 결과 출력
+print(correlation_matrix)
+print()
+print('-'*20 + "상관계수 정리" + '-'*20)
+# 'buy_price'(금값)기준으로 상관계수를 정렬
+print(correlation_matrix['buy_price'].sort_values(ascending=False))
