@@ -6,6 +6,8 @@ data_visual : comparison_all.xlsx파일을 통해 시각화
 
 interaction_value : 여러 수집데이터를 가지고 상관계수 구하기. 미리 엑셀파일이든 csv든간에 정리 되있어야함
 
+mutualDataVisuality : VIX와 환율의 상관관계의 2025년 10월 26일 기준 1달마다의 변동을 시각화해서 나타낸것
+
 naver_ace_etf : 네이버 증권읜 ACE KRX금현물에 대한 종가 데이터
 
 naver_news_selenium : 네이버 뉴스의 제목'만' 크롤링하는 구조. 방식은 기간별로 매번 페이지를 갱신해서 따오는 방식
