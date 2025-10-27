@@ -1,0 +1,36 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import timedelta, datetime
+from pandas import to_datetime
+Start_Date = '2024-10-01'
+#엑셀 읽어오기
+df = pd.read_excel('ForCal.xlsx')
+df['date'] = pd.to_datetime(df['date'])
+df = df.set_index('date')
+Curr_date = Start_Date
+Curr_date = datetime.strptime(Curr_date, '%Y-%m-%d')
+dates = []
+values = []
+cols = ['won/dollar', 'VIX_종가']
+for i in range(0,13):
+    temp_date = Curr_date.strftime('%Y-%m-%d')
+    temp_df = df[df.index > temp_date]
+    correlation_matrix = temp_df.corr(method='pearson', numeric_only=True)
+    dates.append(f"{12-i}M")
+    values.append([float(correlation_matrix['gold_price']['won/dollar']),
+                    float(correlation_matrix['gold_price']['VIX_종가'])])
+    Curr_date = Curr_date + timedelta(days = 30)
+    if Curr_date > to_datetime(datetime.now().date()):
+        Curr_date = Curr_date - timedelta(days=30)
+dates = np.array(dates)
+values = np.array(values)
+
+print(Curr_date)
+plt.plot(dates, values[:,0], "r*-", label = 'won/dollar')
+plt.plot(dates, values[:,1], "g^-", label = 'VIX_value')
+plt.legend(loc='best')
+plt.xlabel("2024-10-01 ~ 2025-10-26")
+
+plt.show()
+
